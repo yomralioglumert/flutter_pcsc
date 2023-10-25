@@ -1,4 +1,5 @@
 import 'dart:ffi' as ffi;
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
@@ -145,40 +146,40 @@ class PCSCBinding {
   }
 
   Future<Map> waitForCardPresent(int context, String readerName) async {
-    print("1");
+    stdout.write("1");
     Map map = await cardGetStatusChange(context, readerName);
-    print("2 && $map ");
+    stdout.write("2 && $map ");
     int currentState = map['pcsc_tag']['event_state'];
-    print("3 && $currentState ");
+    stdout.write("3 && $currentState ");
     if (currentState & PcscConstants.SCARD_STATE_EMPTY != 0) {
-      print("if e girdikk");
+      stdout.write("if e girdikk");
       return await compute(_computeFunctionCardGetStatusChange, {
         'context': context,
         'reader_name': readerName,
         'current_state': currentState
       });
     } else {
-      print("else e girdikk");
+      stdout.write("else e girdikk");
       return map;
     }
   }
 
   Future<void> waitForCardRemoved(int context, String readerName) async {
-    print("R1");
+    stdout.write("R1");
     Map map = await cardGetStatusChange(context, readerName);
-    print("R2 && $map ");
+    stdout.write("R2 && $map ");
 
     int currentState = map['pcsc_tag']['event_state'];
-    print("R3 && $currentState ");
+    stdout.write("R3 && $currentState ");
     if (currentState & PcscConstants.SCARD_STATE_PRESENT != 0) {
-      print("R if e girdikk");
+      stdout.write("R if e girdikk");
       await compute(_computeFunctionCardGetStatusChange, {
         'context': context,
         'reader_name': readerName,
         'current_state': currentState
       });
     }
-    print("R if e girmedikk");
+    stdout.write("R if e girmedikk");
   }
 
   /*
