@@ -57,6 +57,11 @@ class PcscLinux extends PcscPlatform {
     return _binding.releaseContext(context);
   }
 
+  @override
+  Future<Map> cardGetStatusChange(int context, String readerName) {
+    return _binding.cardGetStatusChange(context, readerName);
+  }
+
   /// Waits for a card to be present on the specified reader.
   ///
   /// If a card is already present, it does not wait.
