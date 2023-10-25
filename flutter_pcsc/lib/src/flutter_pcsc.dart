@@ -1,12 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'package:flutter_pcsc_linux/flutter_pcsc_linux.dart';
-import 'package:flutter_pcsc_macos/flutter_pcsc_macos.dart';
 import 'package:flutter_pcsc_platform_interface/flutter_pcsc_platform_interface.dart';
-import 'package:flutter_pcsc_windows/flutter_pcsc_windows.dart';
 
 /// The main class to use to deal with PCSC.
 class Pcsc {
@@ -176,13 +172,13 @@ PcscPlatform get _platform {
       if (Platform.isLinux) {
         PcscPlatform.instance = PcscLinux();
       } else if (Platform.isWindows) {
-        PcscPlatform.instance = PcscWindows();
+        PcscPlatform.instance = PcscLinux();
       } else if (Platform.isMacOS) {
-        PcscPlatform.instance = PcscMacOS();
+        PcscPlatform.instance = PcscLinux();
       }
     }
     _manualDartRegistrationNeeded = false;
   }
 
-  return PcscPlatform.instance;
+  return PcscLinux();
 }

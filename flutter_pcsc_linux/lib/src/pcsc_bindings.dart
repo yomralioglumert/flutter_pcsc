@@ -6,6 +6,7 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_pcsc_linux/src/generated_bindings.dart';
 import 'package:flutter_pcsc_platform_interface/flutter_pcsc_platform_interface.dart';
+import 'package:logging/logging.dart';
 
 class PCSCBinding {
   static final _dylib = ffi.DynamicLibrary.open("libpcsclite.so.1");
@@ -146,40 +147,40 @@ class PCSCBinding {
   }
 
   Future<Map> waitForCardPresent(int context, String readerName) async {
-    stdout.write("1");
+    Logger("1");
     Map map = await cardGetStatusChange(context, readerName);
-    stdout.write("2 && $map ");
+    Logger("2 && $map ");
     int currentState = map['pcsc_tag']['event_state'];
-    stdout.write("3 && $currentState ");
+    Logger("3 && $currentState ");
     if (currentState & PcscConstants.SCARD_STATE_EMPTY != 0) {
-      stdout.write("if e girdikk");
+      Logger("if e girdikk");
       return await compute(_computeFunctionCardGetStatusChange, {
         'context': context,
         'reader_name': readerName,
         'current_state': currentState
       });
     } else {
-      stdout.write("else e girdikk");
+      Logger("else e girdikk");
       return map;
     }
   }
 
   Future<void> waitForCardRemoved(int context, String readerName) async {
-    stdout.write("R1");
+    Logger("R1");
     Map map = await cardGetStatusChange(context, readerName);
-    stdout.write("R2 && $map ");
+    Logger("R2 && $map ");
 
     int currentState = map['pcsc_tag']['event_state'];
-    stdout.write("R3 && $currentState ");
+    Logger("R3 && $currentState ");
     if (currentState & PcscConstants.SCARD_STATE_PRESENT != 0) {
-      stdout.write("R if e girdikk");
+      Logger("R if e girdikk");
       await compute(_computeFunctionCardGetStatusChange, {
         'context': context,
         'reader_name': readerName,
         'current_state': currentState
       });
     }
-    stdout.write("R if e girmedikk");
+    Logger("R if e girmedikk");
   }
 
   /*
